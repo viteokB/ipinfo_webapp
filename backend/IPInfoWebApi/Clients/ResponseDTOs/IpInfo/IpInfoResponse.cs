@@ -1,4 +1,4 @@
-﻿namespace IPInfoWebApi.Models.IpInfo;
+﻿namespace IPInfoWebApi.ResponseDTOs.IpInfo;
 
 public class IpInfoResponse
 {

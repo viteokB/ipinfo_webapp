@@ -1,11 +1,10 @@
-﻿
-using System.Net;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using IPInfoWebApi.Helpers;
 using IPInfoWebApi.Models;
-using IPInfoWebApi.Models.AbuseIp;
-using IPInfoWebApi.Models.FreeGeoIp;
-using IPInfoWebApi.Models.IpInfo;
+using IPInfoWebApi.ResponseDTOs;
+using IPInfoWebApi.ResponseDTOs.AbuseIp;
+using IPInfoWebApi.ResponseDTOs.FreeGeoIp;
+using IPInfoWebApi.ResponseDTOs.IpInfo;
 using Microsoft.Extensions.Options;
 
 namespace IPInfoWebApi.Clients.cs;
@@ -28,10 +27,10 @@ public class IpDataService
         {
             var content = await response.Content.ReadFromJsonAsync<IpInfoResponse>();
             
-            return OperationResult<IpInfoResponse>.Success(content);
+            return OperationResult<IpInfoResponse>.Success(content!);
         }
         
-        return OperationResult<IpInfoResponse>.Error("Ошибка запроса", (int)response.StatusCode);
+        return OperationResult<IpInfoResponse>.Error("Ошибка запроса к api.ipinfo.io", (int)response.StatusCode);
     }
 
     public async Task<OperationResult<FreeGeoIpResponse>> GetFreeGeoIpAsync(string ip)
@@ -46,10 +45,10 @@ public class IpDataService
         {
             var content = await response.Content.ReadFromJsonAsync<FreeGeoIpResponse>();
             
-            return OperationResult<FreeGeoIpResponse>.Success(content);
+            return OperationResult<FreeGeoIpResponse>.Success(content!);
         }
             
-        return OperationResult<FreeGeoIpResponse>.Error("Ошибка запроса", (int)response.StatusCode);
+        return OperationResult<FreeGeoIpResponse>.Error("Ошибка запроса к api.ipbase.com", (int)response.StatusCode);
     }
 
     public async Task<OperationResult<AbuseIpDbResponse>> GetAbuseIpDbInfoAsync(string ipAddress, int maxAgeInDays, bool verbose = false)
@@ -64,7 +63,7 @@ public class IpDataService
         {
             ["ipAddress"] = ipAddress,
             ["maxAgeInDays"] = maxAgeInDays.ToString(),
-            ["verbose"] = verbose ? "" : null // параметр без значения
+            ["verbose"] = (verbose ? "" : null)! // параметр без значения
         };
         
         var validParams = queryParams
@@ -80,9 +79,9 @@ public class IpDataService
         {
             var content = await response.Content.ReadFromJsonAsync<AbuseIpDbResponse>();
 
-            return OperationResult<AbuseIpDbResponse>.Success(content);
+            return OperationResult<AbuseIpDbResponse>.Success(content!);
         }
 
-        return OperationResult<AbuseIpDbResponse>.Error("Ошибка запроса к Abuse", (int)response.StatusCode);
+        return OperationResult<AbuseIpDbResponse>.Error("Ошибка запроса к api.abuseipdb.com", (int)response.StatusCode);
     }
 }

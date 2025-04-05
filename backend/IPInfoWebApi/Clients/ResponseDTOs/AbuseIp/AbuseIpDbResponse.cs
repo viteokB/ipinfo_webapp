@@ -1,4 +1,4 @@
-﻿namespace IPInfoWebApi.Models.AbuseIp;
+﻿namespace IPInfoWebApi.ResponseDTOs.AbuseIp;
 
 public class AbuseIpDbResponse
 {

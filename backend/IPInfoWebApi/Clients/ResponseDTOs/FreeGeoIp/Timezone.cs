@@ -1,4 +1,4 @@
-﻿namespace IPInfoWebApi.Models.FreeGeoIp;
+﻿namespace IPInfoWebApi.ResponseDTOs.FreeGeoIp;
 
 public class Timezone
 {
