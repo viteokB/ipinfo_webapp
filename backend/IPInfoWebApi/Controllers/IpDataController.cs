@@ -167,4 +167,26 @@ public class IpDataController(IpDataService ipDataService) : ControllerBase
     }
     
     #endregion
+    
+    # region 
+    
+    [HttpOptions]
+    // [HttpGet("ipinfo/")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult CheckApiStatus()
+    {
+        try
+        {
+            Response.Headers.Append("Allow", "GET, OPTIONS");
+        
+            return Ok();
+        }
+        catch
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "API unavailable");
+        }
+    }
+    
+    #endregion
 }

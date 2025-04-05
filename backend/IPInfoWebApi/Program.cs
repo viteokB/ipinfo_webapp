@@ -50,6 +50,16 @@ builder.Services.AddSingleton<TokensPool>(sp =>
 
 builder.Services.AddScoped<IpDataService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000") // Укажите ваш фронтенд-адрес
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -57,6 +67,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 // app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.MapControllers();
 
