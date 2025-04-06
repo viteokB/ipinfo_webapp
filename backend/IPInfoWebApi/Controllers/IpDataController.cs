@@ -22,14 +22,23 @@ public class IpDataController(IpDataService ipDataService) : ControllerBase
 
     private string? GetClientIp()
     {
-        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-        
         if (HttpContext.Request.Headers.TryGetValue("X-Forwarded-For", out var forwardedFor))
         {
-            ipAddress = forwardedFor.FirstOrDefault()?.Split(',').FirstOrDefault()?.Trim();
+            var ipAddress = forwardedFor.FirstOrDefault()?.Split(',').FirstOrDefault()?.Trim();
+
+            if (!string.IsNullOrEmpty(ipAddress) && IsValidIp(ipAddress))
+                return ipAddress;
         }
 
-        return !string.IsNullOrEmpty(ipAddress) && IsValidIp(ipAddress) ? ipAddress : null;
+        if (HttpContext.Request.Headers.TryGetValue("X-Real-IP", out var realIp))
+        {
+            var ipAddress = realIp.FirstOrDefault()?.Split(',').FirstOrDefault()?.Trim();
+            
+            if (!string.IsNullOrEmpty(ipAddress) && IsValidIp(ipAddress))
+                return ipAddress;
+        }
+
+        return HttpContext.Connection.RemoteIpAddress?.ToString();
     }
     
     #endregion

@@ -1,0 +1,35 @@
+services:
+  nginx:
+    image: nginx:stable-alpine
+    ports:
+     - "80:80"
+    volumes:
+     - "./nginx.conf:/etc/nginx/nginx.conf"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - networkName
+
+  backend:
+    container_name: ipinfo_webapi
+    image: ${DOCKER_REGISTRY-}ipinfo_webapi
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    networks:
+      - networkName
+  
+  frontend:
+    container_name: ipinfo_frontend
+    image: ipinfo_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - networkName
+
+name: ipinfo_application
+networks:
+  networkName:
+    driver: bridge
